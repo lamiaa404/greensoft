@@ -1,0 +1,37 @@
+version: "3.7"
+
+# hier sind die container definiert die wir auf dem
+# server nutzen und wie docker sie konfigurieren soll
+services:
+  frontend:
+    # baut static files aus dem vue code
+    # werden mit nginx gehostet
+    container_name: frontend-runner
+    # das ist das image was kaniko in der build stage
+    # in die container registry hochgeladen hat
+    image: swtpnils/frontend-runner
+    ports:
+    # port 80 im container auf port 80 auf dem server mappen
+      - 80:80
+    # docker startet den container automatisch neu
+    # außer man benutzt den 'docker stop' befehl
+    restart: unless-stopped
+    # das backend muss laufen damit der frontend container läuft
+    depends_on:
+      - "springapi"
+
+  springapi:
+    container_name: spring-backend
+    image: swtpnils/spring-backend
+    ports:
+    # port 8080 wird auf localhost:8080 beim server gebunden
+    # localhost ist von außen nicht erreichbar, nur vom server
+    # selber aus
+    # https://en.wikipedia.org/wiki/Localhost
+      - 127.0.0.1:8080:8080
+    restart: unless-stopped
+
+  mqtt:
+    container_name: mqtt
+    image: swtpnils/mqtt
+    restart: unless-stopped

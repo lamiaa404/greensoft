@@ -1,0 +1,5 @@
+# m h  dom mon dow   command
+# das ist die temporäre "docker logs löschen bevor sie zu groß werden und unsere linux box
+# einen lockup hat weil kein disk space mehr frei ist"-lösung
+# stand der permanenten lösung in issue #88
+30 2 * * * rm -f /var/lib/docker/containers/*/*-json.log
